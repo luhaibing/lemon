@@ -1,0 +1,1 @@
+## Glide 可以直接加载 path 中 以 *.josn、*.svga、*.svg 为后缀的在线链接
