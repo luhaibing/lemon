@@ -41,6 +41,22 @@ class SVGADrawableDataFetcher(
     private val timeout: Duration = 30.seconds
 ) : DataFetcher<SVGADrawable> {
 
+    companion object {
+        fun convert(inputStream: InputStream, parser: SVGAParser): SVGADrawable = runBlocking {
+            val deferred = CompletableDeferred<SVGADrawable>()
+            parser.decodeFromInputStream(inputStream, System.currentTimeMillis().toString(), object : ParseCompletion {
+                override fun onComplete(videoItem: SVGAVideoEntity) {
+                    deferred.complete(SVGADrawable(videoItem))
+                }
+
+                override fun onError() {
+                    deferred.completeExceptionally(Exception("SVG解析失败"))
+                }
+            })
+            deferred.await()
+        }
+    }
+
     private val parser: SVGAParser by lazy {
         SVGAParser(context)
     }
@@ -53,7 +69,7 @@ class SVGADrawableDataFetcher(
         val file = File(context.cacheDir, "${url.cacheKey.md5}.svga")
         val drawable: SVGADrawable? = try {
             if (file.exists()) {
-                convert(file.inputStream())
+                convert(file.inputStream(), parser)
             } else {
                 null
             }
@@ -81,7 +97,7 @@ class SVGADrawableDataFetcher(
                             sink.writeAll(peeked)   // 写入文件
                             sink.flush()
                             sink.close()
-                            callback.onDataReady(convert(buffer.inputStream()))
+                            callback.onDataReady(convert(buffer.inputStream(), parser))
                         } catch (e: Exception) {
                             e("[$file]文件保存失败", e)
                             e.printStackTrace()
@@ -94,20 +110,6 @@ class SVGADrawableDataFetcher(
                 }
             })
         }
-    }
-
-    private fun convert(inputStream: InputStream): SVGADrawable = runBlocking {
-        val deferred = CompletableDeferred<SVGADrawable>()
-        parser.decodeFromInputStream(inputStream, System.currentTimeMillis().toString(), object : ParseCompletion {
-            override fun onComplete(videoItem: SVGAVideoEntity) {
-                deferred.complete(SVGADrawable(videoItem))
-            }
-
-            override fun onError() {
-                deferred.completeExceptionally(Exception("SVG解析失败"))
-            }
-        })
-        deferred.await()
     }
 
     override fun cleanup() {

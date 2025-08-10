@@ -37,6 +37,14 @@ class PictureDrawableDataFetcher(
     private val timeout: Duration = 30.seconds
 ) : DataFetcher<PictureDrawable> {
 
+    companion object{
+        fun convert(inputStream: InputStream): PictureDrawable {
+            val svg: SVG = SVG.getFromInputStream(inputStream)
+            val picture = svg.renderToPicture()
+            return PictureDrawable(picture)
+        }
+    }
+
     private val delegate: DataFetcher<InputStream> by lazy {
         HttpUrlFetcher(url, timeout.inWholeMilliseconds.toInt())
     }
@@ -86,12 +94,6 @@ class PictureDrawableDataFetcher(
                 }
             })
         }
-    }
-
-    private fun convert(inputStream: InputStream): PictureDrawable {
-        val svg: SVG = SVG.getFromInputStream(inputStream)
-        val picture = svg.renderToPicture()
-        return PictureDrawable(picture)
     }
 
     override fun cleanup() {

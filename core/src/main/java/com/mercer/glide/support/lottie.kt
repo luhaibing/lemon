@@ -36,6 +36,16 @@ class LottieDrawableDataFetcher(
     private val timeout: Duration = 30.seconds
 ) : DataFetcher<LottieDrawable> {
 
+    companion object {
+
+        fun convert(inputStream: InputStream, cacheKey: String?): LottieDrawable {
+            val composition = LottieCompositionFactory.fromJsonInputStreamSync(inputStream, cacheKey).getValue()
+            val drawable = LottieDrawable()
+            drawable.setComposition(composition)
+            return drawable
+        }
+    }
+
     private val delegate: DataFetcher<InputStream> by lazy {
         HttpUrlFetcher(url, timeout.inWholeMilliseconds.toInt())
     }
@@ -44,7 +54,7 @@ class LottieDrawableDataFetcher(
         val file = File(context.cacheDir, "${url.cacheKey.md5}.json")
         val drawable: LottieDrawable? = try {
             if (file.exists()) {
-                convert(file.inputStream())
+                convert(file.inputStream(), url.cacheKey)
             } else {
                 null
             }
@@ -72,7 +82,7 @@ class LottieDrawableDataFetcher(
                             sink.writeAll(peeked)   // 写入文件
                             sink.flush()
                             sink.close()
-                            callback.onDataReady(convert(buffer.inputStream()))
+                            callback.onDataReady(convert(buffer.inputStream(), url.cacheKey))
                         } catch (e: Exception) {
                             e("[$file]文件保存失败", e)
                             e.printStackTrace()
@@ -85,13 +95,6 @@ class LottieDrawableDataFetcher(
                 }
             })
         }
-    }
-
-    private fun convert(inputStream: InputStream): LottieDrawable {
-        val composition = LottieCompositionFactory.fromJsonInputStreamSync(inputStream, url.cacheKey).getValue()
-        val drawable = LottieDrawable()
-        drawable.setComposition(composition)
-        return drawable
     }
 
     override fun cleanup() {
