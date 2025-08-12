@@ -12,10 +12,14 @@ const val TAG = "GlideSupport"
 
 fun e(vararg values: Any) {
     val message = values.joinToString(separator = " >>> ", transform = Any::toString)
-    Log.e(TAG, message)
+    if (BuildConfig.DEBUG) {
+        Log.e(TAG, message)
+    }
 }
 
 fun d(vararg values: Any) {
     val message = values.joinToString(separator = " >>> ", transform = Any::toString)
-    Log.d(TAG, message)
+    if (BuildConfig.DEBUG) {
+        Log.d(TAG, message)
+    }
 }
