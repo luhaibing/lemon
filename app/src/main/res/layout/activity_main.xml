@@ -7,6 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/navContent"
+        android:name="com.mercer.glide.support.app.BlankFragment"
+        tools:layout="@layout/fragment_blank"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <com.opensource.svgaplayer.SVGAImageView
         android:id="@+id/iv1"
         android:layout_width="150dp"
@@ -19,7 +31,7 @@
         android:layout_width="150dp"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1"
-        app:lottie_autoPlay="false"
+        app:lottie_autoPlay="true"
         app:lottie_loop="true"
         tools:ignore="ContentDescription"
         tools:src="@mipmap/ic_launcher"

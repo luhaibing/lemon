@@ -1,6 +1,7 @@
 package com.mercer.glide.support
 
 import android.content.Context
+import android.content.res.AssetManager
 import android.graphics.drawable.PictureDrawable
 import com.airbnb.lottie.LottieDrawable
 import com.bumptech.glide.Glide
@@ -38,6 +39,9 @@ class SupportGlideModule : LibraryGlideModule() {
         registry.append(InputStream::class.java, SVGADrawable::class.java, SVGADrawableADecoder(context))
         registry.append(InputStream::class.java, PictureDrawable::class.java, PictureDrawableDecoder())
         registry.append(InputStream::class.java, LottieDrawable::class.java, LottieDrawableDecoder())
+
+        // 补充玩法 AssetManager.AssetInputStream
+        registry.append(AssetManager.AssetInputStream::class.java, InputStream::class.java, AssetInputStreamLoaderFactory())
     }
 
 }

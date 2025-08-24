@@ -15,7 +15,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.mercer.glide.support.app.databinding.ActivityMainBinding
 import com.opensource.svgaplayer.SVGADrawable
 import com.opensource.svgaplayer.SVGAImageView
-import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -45,8 +44,12 @@ class MainActivity : AppCompatActivity() {
                 )
             Glide.with(iv2)
                 .`as`(LottieDrawable::class.java)
-                .load(Data.LOTTIE)
-                // .diskCacheStrategy(DiskCacheStrategy.NONE)
+                // .load("file:///android_asset/location.json")     // 加载 Asset 资源
+                // .load(assets.open("location.json"))              // 加载 Asset 资源[补充玩法 AssetManager.AssetInputStream][不推荐]
+                // .load(R.raw.location)                            // 加载 Raw 资源
+                .load(Data.LOTTIE)                        // 加载网络资源
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                // .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .placeholder(LoadingDrawable(iv2, getColor(R.color.color_EEEEEE), radius))
                 .error(R.drawable.loaded_failure_placeholder)
                 .into(

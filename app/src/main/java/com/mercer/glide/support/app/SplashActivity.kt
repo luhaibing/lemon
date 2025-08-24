@@ -30,7 +30,9 @@ class SplashActivity : AppCompatActivity() {
                 Glide.with(this@SplashActivity).load(Data.JPEG).preload()
             }
             btNext.setOnClickListener {
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java).apply {
+                    putExtra("k1",1753336179000)
+                })
             }
         }
     }

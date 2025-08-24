@@ -58,4 +58,10 @@ dependencies {
     implementation(libs.okio)
     implementation(libs.kotlinx.coroutines.core)
 
+    implementation("androidx.navigation:navigation-fragment-ktx:2.9.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-android:2.9.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate-android:2.9.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.9.2")
+
 }
